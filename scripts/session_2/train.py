@@ -60,10 +60,10 @@ def train():
 
     # Model Hyperparameters
     model_params = {
-        "max_iter": 5000,
-        "tol": 1e-3,
+        "max_iter": 3000,
+        "tol": 1e-4,
         "learning_rate": "optimal",
-        "random_state": 20,
+        "random_state": 30,
     }
 
     logger.info("Building pipeline...")

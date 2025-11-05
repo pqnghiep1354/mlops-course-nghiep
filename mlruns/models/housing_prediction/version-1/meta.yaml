@@ -1,0 +1,15 @@
+creation_timestamp: 1761560342816
+current_stage: None
+deployment_job_state: null
+description: ''
+last_updated_timestamp: 1761560342816
+model_id: m-6dc02fb37df04577bcfacf1256410ecc
+name: housing_prediction
+run_id: fe6379b52a144c999267533c9a5be50d
+run_link: ''
+source: file:D:/Nghiep_works/0. Cole_AI/Bootcamp_MLOps/Session_1/mlops-course-students-main/mlruns/768642922595619160/models/m-6dc02fb37df04577bcfacf1256410ecc/artifacts
+status: READY
+status_message: null
+storage_location: file:D:/Nghiep_works/0. Cole_AI/Bootcamp_MLOps/Session_1/mlops-course-students-main/mlruns/768642922595619160/models/m-6dc02fb37df04577bcfacf1256410ecc/artifacts
+user_id: null
+version: 1
