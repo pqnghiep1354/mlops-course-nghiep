@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  service1:
+    # Build image từ Dockerfile trong thư mục service1
+    build: ./service1
+    container_name: service1_reader
+    # Map port 8000 của container ra port 8000 của host
+    # Chỉ cần mở port này nếu bạn muốn test riêng Service 1 từ bên ngoài Docker
+    ports:
+      - "8000:8000"
+    # Thiết lập mount: file number.txt ở host được mount vào /app/number.txt trong container
+    volumes:
+      - ./number.txt:/app/number.txt
+    networks:
+      - app_network
+
+  service2:
+    # Build image từ Dockerfile trong thư mục service2
+    build: ./service2
+    container_name: service2_calculator
+    # Map port 8001 của container ra port 8001 của host (đây là API bạn sẽ gọi)
+    ports:
+      - "8001:8001"
+    # Service 2 phụ thuộc vào Service 1
+    depends_on:
+      - service1
+    networks:
+      - app_network
+    
+# Định nghĩa mạng nội bộ để các services có thể giao tiếp bằng tên service (service1, service2)
+networks:
+  app_network:
+    driver: bridge

@@ -4,7 +4,6 @@ from pathlib import Path
 
 import joblib
 import mlflow
-import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import SGDRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
@@ -12,28 +11,30 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-# Set MLflow tracking URI. Using a local file-based store is common for local development.
-mlflow.set_tracking_uri("file:./mlruns")
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5050")
+
+mlflow.set_tracking_uri(uri=MLFLOW_TRACKING_URI)
 
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    format="%(asctime)s %(levelname)s %(name)s - %(message)s",
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("housing")
 
 
 def train():
     mlflow.set_experiment("housing_price_training")
-
     # Paths
     PROJECT_ROOT = Path(os.getcwd())
     DATA_PATH = PROJECT_ROOT / "data" / "housing.csv"
-    ARTIFACT_DIR = PROJECT_ROOT / "artifacts"
+    ARTIFACT_DIR = PROJECT_ROOT / "scripts" / "session_1"
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
-    MODEL_PATH = ARTIFACT_DIR / "housing_linear_sgd.joblib"
+    MODEL_PATH = ARTIFACT_DIR / "housing_linear.joblib"
 
     logger.info(f"Data path: {DATA_PATH}")
+    logger.info(f"Artifact dir: {ARTIFACT_DIR}")
+    import pandas as pd
 
     logger.info("Loading dataset...")
     df = pd.read_csv(DATA_PATH)
@@ -54,42 +55,48 @@ def train():
     y = df[TARGET]
 
     logger.info("Splitting train/test...")
-    test_split_ratio = 0.2
-    data_split_random_state = 42
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_split_ratio, random_state=data_split_random_state)
-
-    # Model Hyperparameters
-    model_params = {
-        "max_iter": 3000,
-        "tol": 1e-4,
-        "learning_rate": "optimal",
-        "random_state": 30,
-    }
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     logger.info("Building pipeline...")
     preprocessor = ColumnTransformer(
         transformers=[
             ("num", StandardScaler(), NUM_FEATURES),
+            # ("cat", OneHotEncoder(handle_unknown="ignore"), CAT_FEATURES),
         ],
         remainder="drop",
     )
+    max_iter = 5000
+    tol = 1e-3
+    learning_rate = "optimal"
+    random_state = 20
 
     model = Pipeline(
         steps=[
             ("preprocess", preprocessor),
-            ("regressor", SGDRegressor(**model_params)),
+            (
+                "regressor",
+                SGDRegressor(
+                    max_iter=max_iter,
+                    tol=tol,
+                    learning_rate=learning_rate,
+                    random_state=random_state,
+                    verbose=1,
+                ),
+            ),
         ]
     )
 
     logger.info("Training model...")
-    with mlflow.start_run(run_name="sgd_regressor_training"):
-        # Log all parameters from the dictionary
-        mlflow.log_params(model_params)
-        mlflow.log_param("features", NUM_FEATURES)
-        mlflow.log_param("target", TARGET)
-        mlflow.log_param("test_split_ratio", test_split_ratio)
-        mlflow.log_param("data_split_random_state", data_split_random_state)
-
+    with mlflow.start_run(run_name="housing_linear_regression_5"):
+        mlflow.log_param(
+            "max_iter",
+            max_iter,
+        )
+        mlflow.log_param("tol", tol)
+        mlflow.log_param("learning_rate", learning_rate)
+        mlflow.log_param("random_state", random_state)
         model.fit(X_train, y_train)
 
         # Evaluate model performance
@@ -103,50 +110,42 @@ def train():
         train_mse = mean_squared_error(y_train, y_train_pred)
         train_mae = mean_absolute_error(y_train, y_train_pred)
         train_r2 = r2_score(y_train, y_train_pred)
-        train_rmse = train_mse**0.5
 
         # Calculate metrics for test set
         test_mse = mean_squared_error(y_test, y_test_pred)
         test_mae = mean_absolute_error(y_test, y_test_pred)
         test_r2 = r2_score(y_test, y_test_pred)
-        test_rmse = test_mse**0.5
 
         # Log training metrics
         logger.info("Training set metrics:")
         logger.info(f"  MSE: {train_mse:.4f}")
         logger.info(f"  MAE: {train_mae:.4f}")
         logger.info(f"  R²: {train_r2:.4f}")
-        logger.info(f"  RMSE: {train_rmse:.4f}")
 
         # Log test metrics
         logger.info("Test set metrics:")
         logger.info(f"  MSE: {test_mse:.4f}")
         logger.info(f"  MAE: {test_mae:.4f}")
         logger.info(f"  R²: {test_r2:.4f}")
-        logger.info(f"  RMSE: {test_rmse:.4f}")
-        
-        # Log all metrics to MLflow in one call
-        metrics = {
-            "train_mse": train_mse,
-            "train_mae": train_mae,
-            "train_r2": train_r2,
-            "train_rmse": train_rmse,
-            "test_mse": test_mse,
-            "test_mae": test_mae,
-            "test_r2": test_r2,
-            "test_rmse": test_rmse,
-        }
-        mlflow.log_metrics(metrics)
 
-        # Save the model locally
+        # Log model performance summary
+        logger.info("Model performance summary:")
+        logger.info(f"  Training R²: {train_r2:.4f}, Test R²: {test_r2:.4f}")
+        logger.info(
+            f"  Training RMSE: {train_mse**0.5:.4f}, Test RMSE: {test_mse**0.5:.4f}"
+        )
+
+        # save the model
         joblib.dump(model, MODEL_PATH)
         logger.info(f"Model saved to: {MODEL_PATH}")
-        
-        # Log the local model file as an artifact
-        mlflow.log_artifact(str(MODEL_PATH), "model_files")
-
-        # Log the model to MLflow, including registration in the Model Registry
-        mlflow.sklearn.log_model(model, "model", registered_model_name="housing_price_predictor_sgd_v2")
+        mlflow.log_metric("train_mse", train_mse)
+        mlflow.log_metric("train_mae", train_mae)
+        mlflow.log_metric("train_r2", train_r2)
+        mlflow.log_metric("test_mse", test_mse)
+        mlflow.log_metric("test_mae", test_mae)
+        mlflow.log_metric("test_r2", test_r2)
+        mlflow.log_artifact(MODEL_PATH, "artifacts")
+        mlflow.sklearn.log_model(model, "model")
 
 
 if __name__ == "__main__":

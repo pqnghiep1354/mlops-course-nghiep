@@ -4,11 +4,11 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-# from scripts.session_3.router import predict, utils
+from scripts.session_3.router import predict, utils
 
 app = FastAPI()
-# app.include_router(predict.housing_router)
-# app.include_router(utils.utils_router)
+app.include_router(predict.housing_router)
+app.include_router(utils.utils_router)
 
 
 @app.get("/")
