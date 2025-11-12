@@ -1,0 +1,14 @@
+artifact_uri: file:D:/Nghiep_works/0. Cole_AI/Bootcamp_MLOps/Session_1/mlops-course-students-main/mlruns/768642922595619160/b5e3cf3d3fe244c286f46836ea0b7a1a/artifacts
+end_time: 1761560568252
+entry_point_name: ''
+experiment_id: '768642922595619160'
+lifecycle_stage: active
+run_id: b5e3cf3d3fe244c286f46836ea0b7a1a
+run_name: sgd_regressor_training_4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1761560565296
+status: 3
+tags: []
+user_id: ADMIN

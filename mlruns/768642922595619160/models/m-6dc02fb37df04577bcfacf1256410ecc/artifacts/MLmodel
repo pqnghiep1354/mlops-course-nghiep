@@ -1,0 +1,22 @@
+artifact_path: file:D:/Nghiep_works/0. Cole_AI/Bootcamp_MLOps/Session_1/mlops-course-students-main/mlruns/768642922595619160/models/m-6dc02fb37df04577bcfacf1256410ecc/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+mlflow_version: 3.5.1
+model_id: m-6dc02fb37df04577bcfacf1256410ecc
+model_size_bytes: 2118
+model_uuid: m-6dc02fb37df04577bcfacf1256410ecc
+prompts: null
+run_id: fe6379b52a144c999267533c9a5be50d
+utc_time_created: '2025-10-27 10:15:53.611439'

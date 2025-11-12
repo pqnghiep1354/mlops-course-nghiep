@@ -1,0 +1,15 @@
+creation_timestamp: 1761560156459
+current_stage: None
+deployment_job_state: null
+description: null
+last_updated_timestamp: 1761560156459
+model_id: m-6dc02fb37df04577bcfacf1256410ecc
+name: housing_price_predictor_sgd_v2
+run_id: fe6379b52a144c999267533c9a5be50d
+run_link: null
+source: models:/m-6dc02fb37df04577bcfacf1256410ecc
+status: READY
+status_message: null
+storage_location: file:D:/Nghiep_works/0. Cole_AI/Bootcamp_MLOps/Session_1/mlops-course-students-main/mlruns/768642922595619160/models/m-6dc02fb37df04577bcfacf1256410ecc/artifacts
+user_id: null
+version: 3

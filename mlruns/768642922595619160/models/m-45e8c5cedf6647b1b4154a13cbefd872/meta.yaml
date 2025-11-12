@@ -1,0 +1,10 @@
+artifact_location: file:D:/Nghiep_works/0. Cole_AI/Bootcamp_MLOps/Session_1/mlops-course-students-main/mlruns/768642922595619160/models/m-45e8c5cedf6647b1b4154a13cbefd872/artifacts
+creation_timestamp: 1761555793777
+experiment_id: '768642922595619160'
+last_updated_timestamp: 1761555796696
+model_id: m-45e8c5cedf6647b1b4154a13cbefd872
+model_type: null
+name: model
+source_run_id: 126bcd663d354fe5bd2aba47634d51b3
+status: 2
+status_message: null

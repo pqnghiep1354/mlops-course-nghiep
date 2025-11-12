@@ -1,0 +1,15 @@
+creation_timestamp: 1761637680162
+current_stage: None
+deployment_job_state: null
+description: null
+last_updated_timestamp: 1761637680162
+model_id: m-48de7a5fcbe34cd897b793e871ee2a75
+name: iris_model
+run_id: cfc9afeb78c641e78dfd9598ca743ef2
+run_link: null
+source: models:/m-48de7a5fcbe34cd897b793e871ee2a75
+status: READY
+status_message: null
+storage_location: file:///D:/Nghiep_works/0.%20Cole_AI/Bootcamp_MLOps/Session_1/mlops-course-students-main/mlruns/905366552522030429/models/m-48de7a5fcbe34cd897b793e871ee2a75/artifacts
+user_id: null
+version: 1
