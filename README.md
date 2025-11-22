@@ -89,9 +89,10 @@ We will use Python 3.12 and manage it with `pyenv`. This keeps your system Pytho
 - Windows (WSL Ubuntu):
   ```bash
   # Dependencies
-  sudo apt update && sudo apt -y install build-essential curl git zlib1g-dev \
+  sudo apt update && sudo apt -y install build-essential curl git zsh zlib1g-dev \
     libssl-dev libbz2-dev libreadline-dev libsqlite3-dev libffi-dev \
     liblzma-dev tk-dev
+
 
   # Install pyenv (via installer)
   curl https://pyenv.run | bash
